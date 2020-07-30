@@ -3,8 +3,10 @@ from datetime import datetime
 import subprocess
 import codecs
 import os
+from flask_cors import CORS
 
 app = Flask(__name__)
+cors = CORS(app)
 
 
 @app.route("/", methods=["POST"])
