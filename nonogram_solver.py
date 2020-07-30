@@ -7,7 +7,7 @@ import os
 app = Flask(__name__)
 
 
-@app.route("/", methods=["GET"])
+@app.route("/", methods=["POST"])
 def index():
     # Content-TypeがJSONでないリクエストは受け付けない。
     if request.headers['Content-Type'] != 'application/json':
