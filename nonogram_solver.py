@@ -1,5 +1,4 @@
-import flask
-from flask import Flask, request
+from flask import Flask, request, jsonify
 from datetime import datetime
 import subprocess
 import codecs
@@ -13,7 +12,7 @@ def index():
     # Content-TypeがJSONでないリクエストは受け付けない。
     if request.headers['Content-Type'] != 'application/json':
         print(request.headers['Content-Type'])
-        return flask.jsonify(res='error'), 400
+        return jsonify(res='error'), 400
 
     # ========================================================================
     # JSONに積まれているイラストロジックの行情報と列情報を変数に取得する。
@@ -101,7 +100,7 @@ def index():
     has_multi_answer = False  # 複数解があった場合、この変数をTrueに変更する。
     if 's SATISFIABLE' != res_rows[0]:
         os.remove(filename)
-        return 'Oops! Your question has no answer!'
+        return jsonify({"message": 'Oops! Your question has no answer!', "has_solution": False})
 
     # ========================================================================
     # CSPファイルの末尾に「今さっきの解答と完全一致しないものとする」という条件を加え、
@@ -140,12 +139,11 @@ def index():
     # 解がなかった場合は、解答の絵を返す。
     # ========================================================================
     if has_multi_answer:
-        print(answer_picture)
-        return 'Oops! Your question has multi answer!'
+        return jsonify({"message": 'Oops! Your question has multi answer!', "has_solution": True})
     else:
         print(answer_picture)
         print('------------------------------------')
-        return answer_picture
+        return jsonify({"message": answer_picture, "has_solution": False})
 
 
 if __name__ == '__main__':
